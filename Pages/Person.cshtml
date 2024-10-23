@@ -1,0 +1,125 @@
+﻿@page
+@model PrivacyModel
+@{
+    ViewData["Title"] = "Person Controller";
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            margin-top: 20px;
+        }
+
+        pre {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">@ViewData["Title"]</h1>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2>POST - Save Person</h2>
+                <div class="form-group">
+                    <input type="text" class="form-control mb-2" id="curp" placeholder="CURP">
+                    <input type="text" class="form-control mb-2" id="name" placeholder="Name">
+                    <input type="text" class="form-control mb-2" id="fatherSurname" placeholder="Father Surname">
+                    <input type="text" class="form-control mb-2" id="motherSurname" placeholder="Mother Surname">
+                    <input type="text" class="form-control mb-2" id="fingers" placeholder="Fingers">
+                </div>
+                <button class="btn btn-primary" onclick="postPerson()">Send Datos</button>
+                <pre id="postResponse"></pre>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2>PUT - Update Person</h2>
+                <div class="form-group">
+                    <input type="text" class="form-control mb-2" id="personId" placeholder="Person Id">
+                    <input type="text" class="form-control mb-2" id="curpPut" placeholder="CURP">
+                    <input type="text" class="form-control mb-2" id="namePut" placeholder="Name">
+                    <input type="text" class="form-control mb-2" id="fatherSurnamePut" placeholder="Father Surname">
+                    <input type="text" class="form-control mb-2" id="motherSurnamePut" placeholder="Mother Surname">
+                    <input type="text" class="form-control mb-2" id="fingersPut" placeholder="Fingers">
+                </div>
+                <button class="btn btn-success" onclick="putPerson()">Update data</button>
+                <pre id="putResponse"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function postPerson() {
+            const person = {
+                curp: document.getElementById("curp").value,
+                name: document.getElementById("name").value,
+                fatherSurname: document.getElementById("fatherSurname").value,
+                motherSurname: document.getElementById("motherSurname").value,
+                fingers: document.getElementById("fingers").value
+            };
+
+            try {
+                const response = await fetch('/person', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(person)
+                });
+                const result = await response.json();
+                document.getElementById("postResponse").innerText = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById("postResponse").innerText = "Error: " + error.message;
+            }
+        }
+
+        async function putPerson() {
+            const personId = document.getElementById("personId").value;
+            const person = {
+                curp: document.getElementById("curpPut").value,
+                name: document.getElementById("namePut").value,
+                fatherSurname: document.getElementById("fatherSurnamePut").value,
+                motherSurname: document.getElementById("motherSurnamePut").value,
+                fingers: document.getElementById("fingersPut").value
+            };
+
+            try {
+                const response = await fetch(`/person/${personId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(person)
+                });
+                const result = await response.json();
+                document.getElementById("putResponse").innerText = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById("putResponse").innerText = "Error: " + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

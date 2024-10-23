@@ -1,0 +1,44 @@
+﻿@page
+@model ErrorModel
+@using Microsoft.AspNetCore.Diagnostics
+@inject IWebHostEnvironment HostingEnvironment
+@{
+    ViewData["Title"] = "Error";
+    var statusCode = HttpContext.Features.Get<IStatusCodeReExecuteFeature>()?.OriginalStatusCode ?? 500;
+}
+
+<h1 class="text-danger">Error.</h1>
+<h2 class="text-danger">
+    @if (statusCode == 404)
+    {
+        <span>The page was not found.</span>
+    }
+    else if (statusCode == 500)
+    {
+        <span>Internal Server Error.</span>
+    }
+    else
+    {
+        <span>An error occurred while processing your request.</span>
+    }
+</h2>
+
+@if (Model.ShowRequestId)
+{
+    <p>
+        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+    </p>
+}
+
+@if (HostingEnvironment.EnvironmentName == "Development")
+{
+    <h3>Development mode</h3>
+    <p>You are in the development environment. Detailed information about the error is displayed to help you debug.</p>
+}
+else
+{
+    <h3>Mode of production</h3>
+    <p>An error has occurred, and the team is working to resolve it.</p>
+}
+
+<a href="/" class="btn btn-primary">Back to top</a>

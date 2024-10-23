@@ -1,0 +1,117 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Client</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            margin-top: 20px;
+        }
+
+        pre {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container text-center">
+        <h1>API Test Client</h1>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2>GET</h2>
+                <button class="btn btn-primary" onclick="getData()">Get data</button>
+                <pre id="getResponse"></pre>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2>PUT</h2>
+                <input type="text" class="form-control" id="putId" placeholder="CURP to update">
+                <input type="text" class="form-control mt-2" id="putData" placeholder="New data">
+                <button class="btn btn-success mt-2" onclick="putData()">Update data</button>
+                <pre id="putResponse"></pre>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2>DELETE</h2>
+                <input type="text" class="form-control" id="deleteId" placeholder="CURP to delete">
+                <button class="btn btn-danger mt-2" onclick="deleteData()">Delete data</button>
+                <pre id="deleteResponse"></pre>
+            </div>
+        </div>
+
+        <script>
+            async function getData() {
+                try {
+                    const response = await fetch('/person'); // GET route
+                    const data = await response.json();
+                    document.getElementById("getResponse").innerText = JSON.stringify(data, null, 2);
+                } catch (error) {
+                    document.getElementById("getResponse").innerText = "Error: " + error.message;
+                }
+            }
+
+            async function putData() {
+                const id = document.getElementById("putId").value;
+                const data = document.getElementById("putData").value;
+
+                try {
+                    const response = await fetch(`/person/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ newData: data }) // API model
+                    });
+                    const result = await response.json();
+                    document.getElementById("putResponse").innerText = JSON.stringify(result, null, 2);
+                } catch (error) {
+                    document.getElementById("putResponse").innerText = "Error: " + error.message;
+                }
+            }
+
+            async function deleteData() {
+                const id = document.getElementById("deleteId").value;
+
+                try {
+                    const response = await fetch(`/person/${id}`, {
+                        method: 'DELETE'
+                    });
+                    const result = await response.json();
+                    document.getElementById("deleteResponse").innerText = JSON.stringify(result, null, 2);
+                } catch (error) {
+                    document.getElementById("deleteResponse").innerText = "Error: " + error.message;
+                }
+            }
+        </script>
+    </div>
+</body>
+</html>

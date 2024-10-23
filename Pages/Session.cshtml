@@ -1,0 +1,75 @@
+﻿@page
+@model Cliente_Api.Pages.Index1Model
+@{
+    ViewData["Title"] = "Session Controller";
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 100px;
+            max-width: 400px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        pre {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">@ViewData["Title"]</h1>
+
+        <div class="card">
+            <div class="card-body">
+                <h2 class="text-center">POST - Create account </h2>
+                <div class="form-group">
+                    <input type="text" class="form-control mb-3" id="username" placeholder="Username" required>
+                    <input type="password" class="form-control mb-3" id="password" placeholder="Password" required>
+                </div>
+                <button class="btn btn-primary btn-block" onclick="login()">Create a new</button>
+                <pre id="loginResponse" class="mt-3"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function login() {
+            const credentials = {
+                username: document.getElementById("username").value,
+                password: document.getElementById("password").value
+            };
+
+            try {
+                const response = await fetch('/session/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(credentials)
+                });
+                const result = await response.json();
+                document.getElementById("loginResponse").innerText = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById("loginResponse").innerText = "Error: " + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
